@@ -1,6 +1,30 @@
 /* Here we are importing some custom fonts to use from fonts.google.com */
 @import url('https://fonts.googleapis.com/css2?family=Alkatra:wght@500;700&display=swap');
 
+.background {
+  background-color: white;
+}
+
+.secondaryColor {
+  background-color: #9ee8a6;
+}
+
+.primaryColor {
+  background-color: #58ca64;
+}
+
+.textColor {
+  color: #245e2a;
+}
+
+.buttonTextColor {
+  color: white;
+}
+
+.disabled {
+  color: grey;
+}
+
 /* HTML elements have some default styling 
 - here we remove the default margin and padding from some of our elements
   so that we can make the website take up the whole page
@@ -16,7 +40,6 @@ header {
   padding: 0 30px;
   align-items: center;
   justify-content: space-between;
-  color: #245e2a;
   height: 10vh;
   font-family: 'Alkatra', sans-serif;
 }
@@ -36,13 +59,11 @@ header {
 }
 
 #start {
-  background: #58ca64;
   border: none;
   border-radius: 8px;
   font-size: 1.2em;
   padding: 6px 30px;
   transition: 0.2s;
-  color: white;
   font-weight: 700;
   font-family: 'Alkatra', sans-serif;
 }
@@ -65,10 +86,8 @@ main {
 
 body {
   height: 100vh;
-  background: #fff;
 }
 
 canvas {
-  background: #58ca64;
   border-radius: 30px;
 }

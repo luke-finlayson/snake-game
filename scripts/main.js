@@ -1,39 +1,14 @@
-const canvas = document.querySelector('canvas');
-const context = canvas.getContext('2d');
-
-// This is the resolution of the game's grid. Increase this value to make things bigger
-const resolution = 20;
-
-const gameState = {
-  snake: undefined,
-  food: undefined,
-  score: 0,
-  intervalId: undefined
-};
-
-// An object to hold references to each of the main UI (user interface) elements
-const uiElements = {
-  startButton: document.getElementById('start'),  // The HTML button that starts and restarts the game
-  score: document.getElementById('score')         // The HTML element that displays the current score
-};
-
-// A simple object that declares possible directions for the snake to take
-// We could just use strings - but this way reduces the chance of spelling mistakes
-const Direction = {
-  Left: 'left',
-  Right: 'right',
-  Up: 'up',
-  Down: 'down'
-};
+const snakeColor = "white";
+const foodColor = "white";
 
 // Our snake class that will represent a snake and contain functions that let us control our snake
 class Snake {
   constructor() {
-    // this.body = [{ x: 1, y: 1 }];
-    this.body = [{ x: 5, y: 1 }, { x: 4, y: 1 }, { x: 3, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 1 }]
+    this.body = [{ x: 5, y: 1 }];
     this.direction = Direction.Right;
   }
 
+  // Increase the length of our snake by one square
   grow () {
     this.body.push({
       x: this.body[-1]
@@ -42,7 +17,7 @@ class Snake {
 
   // Draw each part of the snake on the canvas
   draw() {
-    context.fillStyle = 'green';
+    context.fillStyle = snakeColor;
 
     // Draw each 'block' of the snake's body
     this.body.forEach(block => {
@@ -103,24 +78,36 @@ class Snake {
       setScore(gameState.score + 1);
     }
   }
-
-  setDirection(direction) {
-    if (direction === Direction.Up && this.direction === Direction.Down) {
-      return;
-    }
-    else if (direction === Direction.Down && this.Direction === Direction.Up) {
-      return;
-    }
-    else if (direction === Direction.Left && this.direction === Direction.Right) {
-      return;
-    }
-    else if (direction === Direction.Right && this.direction === Direction.Left) {
-      return;
-    }
-
-    this.direction = direction;
-  }
 }
+
+// Grab a reference to our canvas in the JavaScript
+const canvas = document.querySelector('canvas');
+const context = canvas.getContext('2d');
+
+// This is the resolution of the game's grid. Increase this value to make things bigger
+const resolution = 20;
+
+const gameState = {
+  snake: undefined,
+  food: undefined,
+  score: 0,
+  intervalId: undefined
+};
+
+// An object to hold references to each of the main UI (user interface) elements
+const uiElements = {
+  startButton: document.getElementById('start'),  // The HTML button that starts and restarts the game
+  score: document.getElementById('score')         // The HTML element that displays the current score
+};
+
+// A simple object that declares possible directions for the snake to take
+// We could just use strings - but this way reduces the chance of spelling mistakes
+const Direction = {
+  Left: 'left',
+  Right: 'right',
+  Up: 'up',
+  Down: 'down'
+};
 
 // Setup the mouse click event listener for the start button
 uiElements.startButton.addEventListener('click', () => {
@@ -132,20 +119,29 @@ document.addEventListener('keydown', e => {
   // Determine which key was pressed - updating the snakes direction depending on which key it was
   switch (e.key) {
     case "ArrowUp":
-      gameState.snake.setDirection(Direction.Up);
+      if (gameState.snake.direction !== Direction.Down) {
+        gameState.snake.direction = Direction.Up;
+      }
       break;
     case "ArrowDown":
-      gameState.snake.setDirection(Direction.Down);
+      if (gameState.snake.direction !== Direction.Up) {
+        gameState.snake.direction = Direction.Down;
+      }
       break;
     case "ArrowLeft":
-      gameState.snake.setDirection(Direction.Left);
-      break;
+      if (gameState.snake.direction !== Direction.Right) {
+        gameState.snake.direction = Direction.Left;
+      }
+      brea
     case "ArrowRight":
-      gameState.snake.setDirection(Direction.Right);
+      if (gameState.snake.direction !== Direction.Left) {
+        gameState.snake.direction = Direction.Right;
+      }
       break;
   }
 });
 
+// This will update the current game score counter in the code, as well as in the UI
 const setScore = (score) => {
   gameState.score = score;
   uiElements.score.textContent = score;
@@ -166,7 +162,7 @@ const update = () => {
   context.clearRect(0, 0, canvas.width, canvas.height);
   gameState.snake.draw();
   
-  context.fillStyle = "white";
+  context.fillStyle = foodColor;
   
   let x = gameState.food.x * resolution;
   let y = gameState.food.y * resolution;
@@ -190,7 +186,8 @@ const spawnFood = () => {
 
 // Start the game by creating the snake and starting the update events
 const start = () => {
-  uiElements.startButton.style.background = "rgb(225, 225, 225)";
+  uiElements.startButton.classList.remove("primaryColor");
+  uiElements.startButton.classList.add("disabled");
   uiElements.startButton.textContent = "..."
   uiElements.startButton.disabled = true;
 
@@ -205,7 +202,8 @@ const start = () => {
 const end = () => {
   clearInterval(gameState.intervalId);
 
-  uiElements.startButton.style.background = "#58ca64";
+  uiElements.startButton.classList.add("primaryColor");
+  uiElements.startButton.classList.remove("disabled");
   uiElements.startButton.textContent = "START"; 
   uiElements.startButton.disabled = false;
 }
